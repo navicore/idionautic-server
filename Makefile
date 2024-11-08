@@ -1,7 +1,6 @@
 # Makefile for idionautic-server
 
 APP_NAME := idionautic-server
-GO_FILES := $(shell find . -type f -name '*.go' -not -path "./vendor/*")
 VERSION := $(shell git describe --tags --abbrev=0 || echo "v0.1.0")
 BUILD_DIR := ./bin
 DB_FILE := ./telemetry.db
@@ -18,9 +17,9 @@ clean:
 # Build the application binary
 build: $(BUILD_DIR)/$(APP_NAME)
 
-$(BUILD_DIR)/$(APP_NAME): $(GO_FILES)
+$(BUILD_DIR)/$(APP_NAME):
 	@mkdir -p $(BUILD_DIR)
-	go build -o $(BUILD_DIR)/$(APP_NAME) -ldflags "-X main.version=$(VERSION)" ./...
+	go build -o $(BUILD_DIR)/$(APP_NAME) -ldflags "-X main.version=$(VERSION)" .
 
 # Run the application (assumes build target has been run)
 run: build
@@ -51,4 +50,3 @@ db-init:
 db-drop:
 	@echo "Dropping database..."
 	rm -f $(DB_FILE)
-

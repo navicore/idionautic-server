@@ -1,14 +1,11 @@
 package main
 
 import (
-	"idionautic-server/api"
-	"idionautic-server/db"
-	"log"
-	"net/http"
+	"github.com/navicore/idionautic-server/db"
 )
 
 func main() {
 	db.InitDB() // Initializes the SQLite DB
-	router := api.SetupRouter()
-	log.Fatal(http.ListenAndServe(":8080", router))
+	// router := api.SetupRouter()
+	// log.Fatal(http.ListenAndServe(":8080", router))
 }
