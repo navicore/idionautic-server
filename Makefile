@@ -1,6 +1,7 @@
 # Makefile for idionautic-server
 
 APP_NAME := idionautic-server
+GO_FILES := $(shell find . -type f -name '*.go' -not -path "./vendor/*")
 VERSION := $(shell git describe --tags --abbrev=0 || echo "v0.1.0")
 BUILD_DIR := ./bin
 DB_FILE := ./telemetry.db
@@ -14,10 +15,10 @@ all: fmt lint test build
 clean:
 	rm -rf $(BUILD_DIR) $(DB_FILE)
 
-# Build the application binary
+# Build the application binary if any Go files change
 build: $(BUILD_DIR)/$(APP_NAME)
 
-$(BUILD_DIR)/$(APP_NAME):
+$(BUILD_DIR)/$(APP_NAME): $(GO_FILES)
 	@mkdir -p $(BUILD_DIR)
 	go build -o $(BUILD_DIR)/$(APP_NAME) -ldflags "-X main.version=$(VERSION)" .
 

@@ -1,64 +1,53 @@
-/*
-Copyright © 2024 Ed Sweeney
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-*/
 package cmd
 
 import (
-	"os"
+	"fmt"
+	"log"
 
+	"github.com/navicore/idionautic-server/api"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
-// rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "idionautic-server",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
+	Short: "Run the Idionautic telemetry server",
+	Run: func(cmd *cobra.Command, args []string) {
+		port := viper.GetInt("port")
+		iface := viper.GetString("interface")
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	// Run: func(cmd *cobra.Command, args []string) { },
-}
-
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
-func Execute() {
-	err := rootCmd.Execute()
-	if err != nil {
-		os.Exit(1)
-	}
+		fmt.Printf("Starting server on %s:%d...\n", iface, port)
+		api.StartServer(iface, port) // Pass the interface and port to the server
+	},
 }
 
 func init() {
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
+	// Define flags
+	rootCmd.Flags().Int("port", 8080, "Port to run the server on")
+	rootCmd.Flags().String("interface", "0.0.0.0", "Interface to bind the server to")
 
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.idionautic-server.yaml)")
+	// Bind flags with Viper
+	// Bind flags with Viper and check for errors
+	if err := viper.BindPFlag("port", rootCmd.Flags().Lookup("port")); err != nil {
+		log.Fatalf("Error binding port flag: %v", err)
+	}
+	if err := viper.BindPFlag("interface", rootCmd.Flags().Lookup("interface")); err != nil {
+		log.Fatalf("Error binding interface flag: %v", err)
+	}
+	// Enable reading from environment variables
+	viper.SetEnvPrefix("IDIONAUTIC") // Use IDIONAUTIC_PORT, IDIONAUTIC_INTERFACE
+	viper.AutomaticEnv()
 
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// Optionally read from a config file
+	viper.SetConfigName("config") // Name of config file (without extension)
+	viper.SetConfigType("yaml")   // Required if using a config file
+	viper.AddConfigPath(".")      // Optionally look for config in the working directory
+	if err := viper.ReadInConfig(); err != nil {
+		fmt.Println("No config file found, using defaults or ENV variables")
+	}
+}
+
+// Execute starts the root command
+func Execute() error {
+	return rootCmd.Execute()
 }

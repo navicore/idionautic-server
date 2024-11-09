@@ -1,17 +1,26 @@
+// api/handlers.go
+
 package api
 
 import (
 	"encoding/json"
 	"net/http"
+
+	"github.com/navicore/idionautic-server/db"
 )
 
-func IngestTelemetry(w http.ResponseWriter, r *http.Request) {
-	var telemetryData map[string]interface{} // Simple placeholder structure
-	if err := json.NewDecoder(r.Body).Decode(&telemetryData); err != nil {
-		http.Error(w, "Invalid data", http.StatusBadRequest)
+func ingestTelemetryHandler(w http.ResponseWriter, r *http.Request) {
+	var data db.TelemetryData
+	if err := json.NewDecoder(r.Body).Decode(&data); err != nil {
+		http.Error(w, "Invalid JSON payload", http.StatusBadRequest)
 		return
 	}
 
-	// Here, you'd process and store telemetry data
+	// Store telemetry data in SQLite
+	if err := db.SaveTelemetryData(data); err != nil {
+		http.Error(w, "Failed to save data", http.StatusInternalServerError)
+		return
+	}
+
 	w.WriteHeader(http.StatusAccepted)
 }
