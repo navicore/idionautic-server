@@ -25,11 +25,14 @@ builds:
       - linux
       - windows
     goarch:
-      - amd64  # Ensure compatibility with 64-bit architecture
+      - amd64
 
   - id: idionautic-server-macos
     env:
       - CGO_ENABLED=1
+      - GOOS=darwin
+      - CGO_CFLAGS="-mmacosx-version-min=10.13 -arch arm64"
+      - CGO_LDFLAGS="-mmacosx-version-min=10.13 -arch arm64"
     goos:
       - darwin
     goarch:
