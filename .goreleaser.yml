@@ -18,17 +18,18 @@ brews:
     description: POC server for collecting Idionautic observations
 
 builds:
-  - env:
+  - id: idionautic-server-linux-windows
+    env:
       - CGO_ENABLED=0
     goos:
       - linux
       - windows
-    # Linux and Windows builds remain statically compiled
 
-  - env:
+  - id: idionautic-server-macos
+    env:
       - CGO_ENABLED=1
     goos:
-      - darwin  # Enable CGO for macOS builds
+      - darwin
 
 archives:
   - format: tar.gz
