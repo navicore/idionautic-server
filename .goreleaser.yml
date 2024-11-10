@@ -19,11 +19,16 @@ brews:
 
 builds:
   - env:
-      - CGO_ENABLED=1
+      - CGO_ENABLED=0
     goos:
       - linux
       - windows
-      - darwin
+    # Linux and Windows builds remain statically compiled
+
+  - env:
+      - CGO_ENABLED=1
+    goos:
+      - darwin  # Enable CGO for macOS builds
 
 archives:
   - format: tar.gz
