@@ -31,8 +31,8 @@ builds:
     env:
       - CGO_ENABLED=1
       - GOOS=darwin
-      - CGO_CFLAGS="-mmacosx-version-min=10.13 -arch arm64"
-      - CGO_LDFLAGS="-mmacosx-version-min=10.13 -arch arm64"
+      - CGO_CFLAGS="-mmacosx-version-min=10.13"
+      - CGO_LDFLAGS="-mmacosx-version-min=10.13"
     goos:
       - darwin
     goarch:
