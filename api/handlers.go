@@ -37,7 +37,10 @@ func ingestTelemetryHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Parse JSON payload into TelemetryData struct
 	if err := json.Unmarshal(rawData, &data); err != nil {
-		http.Error(w, "Invalid JSON payload", http.StatusBadRequest)
+		http.Error(w, `{"error": "Invalid JSON payload"}`, http.StatusBadRequest)
+
+		log.Warn().Err(err).Msgf("JSON decode error: %v", err)
+		log.Warn().Msgf("Received payload: %v", string(rawData))
 		return
 	}
 
@@ -47,7 +50,13 @@ func ingestTelemetryHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.WriteHeader(http.StatusAccepted)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusAccepted) // Set status to 202 Accepted
+	response := map[string]string{"status": "accepted"}
+	if err := json.NewEncoder(w).Encode(response); err != nil {
+		http.Error(w, "Failed to send response", http.StatusInternalServerError)
+		return
+	}
 }
 
 func getTelemetryAnalysisHandler(w http.ResponseWriter, _ *http.Request) {
