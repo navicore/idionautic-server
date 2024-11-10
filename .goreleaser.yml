@@ -18,26 +18,13 @@ brews:
     description: POC server for collecting Idionautic observations
 
 builds:
-  - id: idionautic-server-linux-windows
+  - id: idionautic-server-linux
     env:
       - CGO_ENABLED=0
     goos:
       - linux
-      - windows
     goarch:
       - amd64
-
-  - id: idionautic-server-macos
-    env:
-      - CGO_ENABLED=1
-      - GOOS=darwin
-      - CGO_CFLAGS="-mmacosx-version-min=10.13"
-      - CGO_LDFLAGS="-mmacosx-version-min=10.13"
-    goos:
-      - darwin
-    goarch:
-      - amd64
-      - arm64
 
 archives:
   - format: tar.gz
