@@ -5,13 +5,13 @@
 class IdionauticServer < Formula
   desc "POC server for collecting Idionautic observations"
   homepage "https://github.com/navicore/idionautic-server"
-  version "0.1.12"
+  version "0.1.13"
   depends_on :linux
 
   on_intel do
     if Hardware::CPU.is_64_bit?
-      url "https://github.com/navicore/idionautic-server/releases/download/v0.1.12/idionautic-server_Linux_x86_64.tar.gz"
-      sha256 "6b8a4958c9f293f936c8a93b44af8731cacfa820b78fedebc9fd314d679d8f22"
+      url "https://github.com/navicore/idionautic-server/releases/download/v0.1.13/idionautic-server_0.1.13_Linux_x86_64.tar.gz"
+      sha256 "00888277ffab575b80ed4e24760ce6c4e5551b1e6d8ec1e22126159c2ae4d741"
 
       def install
         bin.install "idionautic-server"
