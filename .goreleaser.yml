@@ -20,7 +20,7 @@ brews:
 builds:
   - id: idionautic-server-linux
     env:
-      - CGO_ENABLED=0
+      - CGO_ENABLED=1  # Ensure CGO is enabled for Linux
     goos:
       - linux
     goarch:
