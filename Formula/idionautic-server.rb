@@ -5,46 +5,16 @@
 class IdionauticServer < Formula
   desc "POC server for collecting Idionautic observations"
   homepage "https://github.com/navicore/idionautic-server"
-  version "0.1.5"
+  version "0.1.12"
+  depends_on :linux
 
-  on_macos do
-    on_intel do
-      url "https://github.com/navicore/idionautic-server/releases/download/v0.1.5/idionautic-server_Darwin_x86_64.tar.gz"
-      sha256 "eb1c4460dd946ecf97595a65aa746684d20a022f24aca1a54ccd3c058cc29ea3"
-
-      def install
-        bin.install "idionautic-server"
-      end
-    end
-    on_arm do
-      url "https://github.com/navicore/idionautic-server/releases/download/v0.1.5/idionautic-server_Darwin_arm64.tar.gz"
-      sha256 "68a21c019dca211f3fd16cae685ada54040d3445e85e5a5af55b32a2c60a393a"
+  on_intel do
+    if Hardware::CPU.is_64_bit?
+      url "https://github.com/navicore/idionautic-server/releases/download/v0.1.12/idionautic-server_Linux_x86_64.tar.gz"
+      sha256 "6b8a4958c9f293f936c8a93b44af8731cacfa820b78fedebc9fd314d679d8f22"
 
       def install
         bin.install "idionautic-server"
-      end
-    end
-  end
-
-  on_linux do
-    on_intel do
-      if Hardware::CPU.is_64_bit?
-        url "https://github.com/navicore/idionautic-server/releases/download/v0.1.5/idionautic-server_Linux_x86_64.tar.gz"
-        sha256 "97cd871485d2916cbd1dbc4164bf6e919fd80621533c53778e06682bdeb336a5"
-
-        def install
-          bin.install "idionautic-server"
-        end
-      end
-    end
-    on_arm do
-      if Hardware::CPU.is_64_bit?
-        url "https://github.com/navicore/idionautic-server/releases/download/v0.1.5/idionautic-server_Linux_arm64.tar.gz"
-        sha256 "f0471305caa3c58b2bcfd627d4834b025993cca50d701d4b21dd086b46c970c4"
-
-        def install
-          bin.install "idionautic-server"
-        end
       end
     end
   end
