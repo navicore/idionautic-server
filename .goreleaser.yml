@@ -24,12 +24,17 @@ builds:
     goos:
       - linux
       - windows
+    goarch:
+      - amd64  # Ensure compatibility with 64-bit architecture
 
   - id: idionautic-server-macos
     env:
       - CGO_ENABLED=1
     goos:
       - darwin
+    goarch:
+      - amd64
+      - arm64
 
 archives:
   - format: tar.gz
