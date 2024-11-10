@@ -12,7 +12,24 @@ import (
 	"github.com/navicore/idionautic-server/models"
 )
 
+// enableCors adds necessary CORS headers to the response
+func enableCors(w http.ResponseWriter) {
+	w.Header().Set("Access-Control-Allow-Origin", "*") // Allow requests from any origin
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+}
+
 func ingestTelemetryHandler(w http.ResponseWriter, r *http.Request) {
+	enableCors(w) // Add CORS headers to the response
+
+	// Handle your telemetry ingestion logic here
+	if r.Method == http.MethodOptions {
+		// Handle CORS preflight OPTIONS request
+		w.WriteHeader(http.StatusOK)
+		return
+	}
+	// Process actual POST requests for telemetry data
+
 	var data models.TelemetryData
 
 	// Log raw incoming JSON for clarity
